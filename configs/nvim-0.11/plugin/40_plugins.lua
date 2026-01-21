@@ -51,6 +51,23 @@ now_if_args(function()
     checkout = '93d60a475f0b08a8eceb99255863977d3a25f310',
   })
 
+  -- https://pawelgrzybek.com/nvim-incremental-selection/
+  add({
+    source = 'MeanderingProgrammer/treesitter-modules.nvim',
+    depends = { 'nvim-treesitter/nvim-treesitter' },
+  })
+  require('treesitter-modules').setup({
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = '<C-k>',
+        node_incremental = '<C-k>',
+        node_decremental = '<C-j>',
+        -- scope_incremental = ''
+      },
+    },
+  })
+
   -- Define languages which will have parsers installed and auto enabled
   -- After changing this, restart Neovim once to install necessary parsers. Wait
   -- for the installation to finish before opening a file for added language(s).
@@ -159,20 +176,41 @@ later(function() add('rafamadriz/friendly-snippets') end)
 -- If you need them to work elsewhere, consider using other package managers.
 --
 -- You can use it like so:
--- now_if_args(function()
---   add('mason-org/mason.nvim')
---   require('mason').setup()
--- end)
+now_if_args(function()
+  add('mason-org/mason.nvim')
+  require('mason').setup()
+  add('mason-org/mason-lspconfig.nvim')
+  require('mason-lspconfig').setup({
+    ensure_installed = {
+      'bashls',
+      'docker_compose_language_service',
+      'dockerls',
+      'gh_actions_ls',
+      'jsonls',
+      'lua_ls',
+      'marksman',
+    },
+    automatic_enable = true,
+  })
+  for _, name in ipairs({ "prettier", "shellcheck", "shfmt" }) do
+    local ok, pkg = pcall(require("mason-registry").get_package, name)
+    if ok and not pkg:is_installed() then pkg:install() end
+  end
+end)
 
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
 -- have full support of its highlight groups. Use if you don't like 'miniwinter'
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
--- MiniDeps.now(function()
+MiniDeps.now(function()
 --   -- Install only those that you need
 --   add('sainnhe/everforest')
 --   add('Shatur/neovim-ayu')
 --   add('ellisonleao/gruvbox.nvim')
---
+  add('catppuccin/nvim')
+
 --   -- Enable only one
 --   vim.cmd('color everforest')
--- end)
+  vim.cmd('color catppuccin-frappe')
+  -- Transparent background
+  vim.api.nvim_set_hl(0, 'Normal', { bg = 'NONE' })
+end)
