@@ -20,6 +20,7 @@ body:
         - 0.10.x
         - 0.11.x
         - 0.12.x
+        - 0.13 (!at least latest Nightly build!)
       default: 3
     validations:
       required: true
