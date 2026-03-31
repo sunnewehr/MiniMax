@@ -6,7 +6,7 @@ Available:
 
 - [`nvim-0.10`](nvim-0.10) - for Neovim>=0.10
 - [`nvim-0.11`](nvim-0.11) - for Neovim>=0.11
-- [`nvim-0.12`](nvim-0.12) - for Neovim>=0.12 (currently under development)
+- [`nvim-0.12`](nvim-0.12) - for Neovim>=0.12
 
 Differences between selected configs:
 

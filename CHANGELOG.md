@@ -1,3 +1,7 @@
+## 2026-03-31
+
+- Remove the note about unstable status of Neovim 0.12 from `nvim-0.12` config.
+
 ## 2026-03-27
 
 - Add a `<Leader>ll` mapping for running codelens.
