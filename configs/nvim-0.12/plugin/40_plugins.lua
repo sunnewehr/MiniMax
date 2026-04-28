@@ -46,6 +46,19 @@ now_if_args(function()
     'https://github.com/nvim-treesitter/nvim-treesitter',
     'https://github.com/nvim-treesitter/nvim-treesitter-textobjects',
   })
+  -- https://pawelgrzybek.com/nvim-incremental-selection/
+  add({ 'https://github.com/MeanderingProgrammer/treesitter-modules.nvim' })
+  require('treesitter-modules').setup({
+    incremental_selection = {
+      enable = true,
+      keymaps = {
+        init_selection = '<C-k>',
+        node_incremental = '<C-k>',
+        node_decremental = '<C-j>',
+        -- scope_incremental = ''
+      },
+    },
+  })
 
   -- Define languages which will have parsers installed and auto enabled
   -- After changing this, restart Neovim once to install necessary parsers. Wait
@@ -154,16 +167,32 @@ later(function() add({ 'https://github.com/rafamadriz/friendly-snippets' }) end)
 -- The caveat is that these programs will be set up to be mostly used inside Neovim.
 -- If you need them to work elsewhere, consider using other package managers.
 --
--- You can use it like so:
--- now_if_args(function()
---   add({ 'https://github.com/mason-org/mason.nvim' })
---   require('mason').setup()
--- end)
+now_if_args(function()
+  add({ 'https://github.com/mason-org/mason.nvim' })
+  require('mason').setup()
+  add({ 'https://github.com/mason-org/mason-lspconfig.nvim' })
+  require('mason-lspconfig').setup({
+    ensure_installed = {
+      'bashls',
+      'docker_compose_language_service',
+      'dockerls',
+      'gh_actions_ls',
+      'jsonls',
+      'lua_ls',
+      'marksman',
+    },
+    automatic_enable = true,
+  })
+  for _, name in ipairs({ "prettier", "shellcheck", "shfmt" }) do
+    local ok, pkg = pcall(require("mason-registry").get_package, name)
+    if ok and not pkg:is_installed() then pkg:install() end
+  end
+end)
 
 -- Beautiful, usable, well maintained color schemes outside of 'mini.nvim' and
 -- have full support of its highlight groups. Use if you don't like 'miniwinter'
 -- enabled in 'plugin/30_mini.lua' or other suggested 'mini.hues' based ones.
--- Config.now(function()
+Config.now(function()
 --  -- Install only those that you need
 --  add({
 --    'https://github.com/sainnhe/everforest',
@@ -173,4 +202,7 @@ later(function() add({ 'https://github.com/rafamadriz/friendly-snippets' }) end)
 --
 --   -- Enable only one
 --   vim.cmd('color everforest')
--- end)
+  add({ 'https://github.com/EdenEast/nightfox.nvim' })
+  vim.cmd('color carbonfox')
+  vim.api.nvim_set_hl(0, 'Visual', { bg = '#555555' }) -- 25% lighter than default
+end)

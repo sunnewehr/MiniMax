@@ -221,7 +221,7 @@ end)
 -- - `:h MiniFiles-examples` - examples of common setups
 now_if_args(function()
   -- Enable directory/file preview
-  require('mini.files').setup({ windows = { preview = true } })
+  require('mini.files').setup({ windows = { preview = true, width_preview = 60 } })
 
   -- Add common bookmarks for every explorer. Example usage inside explorer:
   -- - `'c` to navigate into your config directory
@@ -405,6 +405,7 @@ later(function()
       { mode = { 'n', 'x' }, keys = 's' },        -- `s` key (mini.surround, etc.)
       { mode = { 'n', 'x' }, keys = 'z' },        -- `z` key
     },
+    window = { delay = 0 },
   })
 end)
 
@@ -529,7 +530,21 @@ later(function() require('mini.jump').setup() end)
 --
 -- See also:
 -- - `:h MiniJump2d.gen_spotter` - list of available spotters
-later(function() require('mini.jump2d').setup() end)
+later(function()
+  local jump2d = require('mini.jump2d')
+  jump2d.setup({
+    -- labels = 'etovxqpdygfblzhckisuran',
+    -- spotter = jump2d.builtin_opts.word_start,
+    -- Same as word_start
+    -- spotter = jump2d.gen_spotter.vimpattern('\\k\\+'),
+    -- word_start, but also split by _ and -
+    spotter = jump2d.gen_spotter.vimpattern([[\%(\k\&[^_-]\)\+]]),
+    view = { n_steps_ahead = 99 },
+  })
+  -- Use same color for all label characters
+  -- vim.api.nvim_set_hl(0, 'MiniJump2dSpotUnique', { link = 'MiniJump2dSpot' })
+  -- vim.api.nvim_set_hl(0, 'MiniJump2dSpotAhead', { link = 'MiniJump2dSpot' })
+end)
 
 -- Special key mappings. Provides helpers to map:
 -- - Multi-step actions. Apply action 1 if condition is met; else apply
